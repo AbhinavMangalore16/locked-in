@@ -2,10 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+*.conf
 # C extensions
 *.so
-
+LOGS
 # Distribution / packaging
 .Python
 build/
@@ -169,3 +169,6 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+DATASETS
+*.csv
+*.json
