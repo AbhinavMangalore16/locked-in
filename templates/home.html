@@ -4,13 +4,64 @@
   <title>Auth0 Example</title>
 </head>
 <body>
-  {% if session %}
-      <h1>Welcome {{session.userinfo.name}}!</h1>
-      <p><a href="/logout">Logout</a></p>
-      <div><pre>{{pretty}}</pre></div>
-  {% else %}
-    <h1>Welcome Guest</h1>
-    <p><a href="/login">Login</a></p>
-  {% endif %}
+    <h1>Welcome {{name}}!</h1>
+    <p><a href="/logout">Logout</a></p>
+    <form action="/predict" method="POST">
+        <input type="hidden" id="email" name="email" value="{{ email }}" />
+        <input type="hidden" id="name" name="name" value="{{ name }}" />
+    
+        <label for="age_group">Age Group:</label>
+        <select id="age_group" name="age_group" required>
+            <option value="" disabled selected>Select your age group</option>
+            <option value="18-25" {% if user_data.get('age_group') == '18-25' %}selected{% endif %}>18-25</option>
+            <option value="26-35" {% if user_data.get('age_group') == '26-35' %}selected{% endif %}>26-35</option>
+            <option value="36-45" {% if user_data.get('age_group') == '36-45' %}selected{% endif %}>36-45</option>
+            <option value="46+" {% if user_data.get('age_group') == '46+' %}selected{% endif %}>46+</option>
+        </select><br><br>
+    
+        <label for="current_role">Current Role:</label>
+        <input type="text" id="current_role" name="current_role" placeholder="{{ user_data.get('current_role', '') }}" required><br><br>
+    
+        <label for="industry">Industry:</label>
+        <input type="text" id="industry" name="industry" placeholder="{{ user_data.get('industry', '') }}" required><br><br>
+    
+        <label for="experience">Years of Experience:</label>
+        <input type="number" id="experience" name="experience" min="0" placeholder="{{ user_data.get('experience', '') }}" required><br><br>
+    
+        <label for="career_goal">Career Goal:</label>
+        <textarea id="career_goal" name="career_goal" placeholder="{{ user_data.get('career_goal', '') }}" required></textarea><br><br>
+    
+        <label for="new_career">Interested in New Career?</label>
+        <select id="new_career" name="new_career" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="Yes" {% if user_data.get('new_career') == 'Yes' %}selected{% endif %}>Yes</option>
+            <option value="No" {% if user_data.get('new_career') == 'No' %}selected{% endif %}>No</option>
+        </select><br><br>
+    
+        <label for="career_switch">If Yes, Preferred Career Field:</label>
+        <input type="text" id="career_switch" name="career_switch" placeholder="{{ user_data.get('career_switch', '') }}"><br><br>
+    
+        <label for="skills">Current Skills:</label>
+        <input type="text" id="skills" name="skills" placeholder="{{ user_data.get('skills', '') }}" required><br><br>
+    
+        <label for="learning_style">Preferred Learning Style:</label>
+        <select id="learning_style" name="learning_style" required>
+            <option value="" disabled selected>Select a learning style</option>
+            <option value="Visual" {% if user_data.get('learning_style') == 'Visual' %}selected{% endif %}>Visual</option>
+            <option value="Auditory" {% if user_data.get('learning_style') == 'Auditory' %}selected{% endif %}>Auditory</option>
+            <option value="Kinesthetic" {% if user_data.get('learning_style') == 'Kinesthetic' %}selected{% endif %}>Kinesthetic</option>
+            <option value="Reading/Writing" {% if user_data.get('learning_style') == 'Reading/Writing' %}selected{% endif %}>Reading/Writing</option>
+        </select><br><br>
+    
+        <label for="time_commitment">Time Commitment (hours per week):</label>
+        <input type="number" id="time_commitment" name="time_commitment" min="1" placeholder="{{ user_data.get('time_commitment', '') }}" required><br><br>
+    
+        <label for="budget">Budget (USD):</label>
+        <input type="number" id="budget" name="budget" min="0" placeholder="{{ user_data.get('budget', '') }}" required><br><br>
+    
+        <button type="submit">Submit</button>
+    </form>
+    
+    
 </body>
 </html>

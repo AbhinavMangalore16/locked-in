@@ -14,6 +14,7 @@ from authlib.integrations.flask_client import OAuth # type: ignore
 from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from utils.gemini_utils import get_career_roadmap
 
 
 utils.logs_utils.setup_logging("LOGS/data_export.log")
@@ -75,13 +76,42 @@ def logout():
 @app.route("/")
 def home():
     if session.get('user'):
-        # print(session.get('user'), json.dumps(session.get('user')))
-        # print(ast.literal_eval(json.dumps(session.get('user')))['email'])
-        print(ast.literal_eval(str(session.get('user'))))
-        return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+        user_data = utils.data_utils.exist_user(ast.literal_eval(str(session.get('user'))))
+
+        return render_template("home.html", name=user_data['name'], email=user_data['email'], user_data=user_data)
     
     else:
-        return redirect(url_for("login"))
+        return render_template("navbar.html")
 
+@app.route("/predict", methods=["POST"])
+def profile():
+    data = request.form
+
+    user_input = {
+        "name": data['name'],
+        "email": data['email'],
+        "age_group": data['age_group'],
+        "current_role": data['current_role'],
+        "industry": data['industry'],
+        "experience": data['experience'],
+        "career_goal": data['career_goal'],
+        "new_career": data['new_career'],
+        "career_switch": data['career_switch'],
+        "skills": data['skills'],
+        "learning_style": data['learning_style'],
+        "time_commitment": data['time_commitment'],
+        "budget": data['budget']
+    }
+
+    utils.data_utils.insert_or_update_user(user_input)
+
+    profile = utils.data_utils.find_user_by_email(user_input['email'])
+
+    output = get_career_roadmap(profile)
+
+    return render_template("output.html", prediction=output)
+
+
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 3000))
