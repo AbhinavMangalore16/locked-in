@@ -1,4 +1,5 @@
 import os
+import ast
 from os import environ as env
 from dotenv import load_dotenv
 import pymongo
@@ -73,7 +74,14 @@ def logout():
 
 @app.route("/")
 def home():
-    return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+    if session.get('user'):
+        # print(session.get('user'), json.dumps(session.get('user')))
+        # print(ast.literal_eval(json.dumps(session.get('user')))['email'])
+        print(ast.literal_eval(str(session.get('user'))))
+        return render_template("home.html", session=session.get('user'), pretty=json.dumps(session.get('user'), indent=4))
+    
+    else:
+        return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 3000))

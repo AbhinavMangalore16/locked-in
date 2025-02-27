@@ -38,3 +38,12 @@ def connect_db():
 
     except Exception as e:
         logger.error(f"Connection Error: {e}")
+
+def exist_user(email):
+    try:
+        db = connect_db()
+        user = db.users.find_one({"email": email})
+        return user
+
+    except Exception as e:
+        logger.error(f"User Exist Error: {e}")
