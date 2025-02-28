@@ -15,6 +15,7 @@ from dotenv import find_dotenv, load_dotenv
 from flask import Flask, redirect, render_template, session, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.gemini_utils import get_career_roadmap
+import utils.pdf_utils
 
 
 utils.logs_utils.setup_logging("LOGS/data_export.log")
@@ -111,7 +112,28 @@ def profile():
 
     return render_template("output.html", prediction=output)
 
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'pdf_file' not in request.files:
+        return "No file part", 400
 
+    file = request.files['pdf_file']
+    goal = request.form['goal']
+
+    if file.filename == '':
+        return "No selected file", 400
+
+    if file and file.filename.endswith('.pdf'):
+        file.save(file.filename)
+        # return f"File successfully uploaded to {file.filename}", 200
+
+        resume_text = utils.pdf_utils.extract_text_from_pdf(file.filename)
+
+    data = {'resume': resume_text, 'goal': goal}
+
+    return render_template("output.html", prediction=get_career_roadmap(data))
+
+    # return "Invalid file format. Please upload a PDF.", 400
     
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=env.get("PORT", 3000))

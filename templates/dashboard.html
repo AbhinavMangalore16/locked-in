@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <script defer src="dashboard.js"></script>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="logo">Dashboard</h2>
+        <ul class="menu">
+            <li><a href="#">🏠 Home</a></li>
+            <li><a href="#">📚 Courses</a></li>
+            <li><a href="#">🎯 Skills</a></li>
+            <li><a href="#">📝 Roadmap</a></li>
+            <li><a href="#">💡 Career Tips</a></li>
+        </ul>
+    </div>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h2>Welcome Back!</h2>
+        <button id="theme-toggle">🌙</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="cards">
+            <div class="card">
+                <h3>🎯 Skills To-Do</h3>
+                <ul id="skills-list" class="todo-list"></ul>
+            </div>
+            <div class="card">
+                <h3>📚 Recommended Courses</h3>
+                <ul id="courses-list" class="todo-list"></ul>
+            </div>
+            <div class="card">
+                <h3>📖 Learning Resources</h3>
+                <ul id="resources-list" class="todo-list"></ul>
+            </div>
+            <div class="card">
+                <h3>🗺️ Weekly Roadmap</h3>
+                <div id="roadmap-container"></div>
+            </div>
+            <div class="card">
+                <h3>💡 Career Tips</h3>
+                <ul id="career-tips" class="todo-list"></ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    // Fetch Data from Backend API
+    fetch("http://localhost:5000/predict")  // Replace with actual API URL
+        .then(response => response.json())
+        .then(data => {
+            populateSkills(data.skills_to_learn);
+            populateCourses(data.recommended_courses);
+            populateResources(data.learning_resources);
+            populateRoadmap(data.roadmap);
+            populateCareerTips(data.career_tips);
+        })
+        .catch(error => console.error("Error fetching data:", error));
+
+    // Function to Populate Skills
+    function populateSkills(skills) {
+        const list = document.getElementById("skills-list");
+        list.innerHTML = "";
+        skills.forEach(skill => {
+            const li = document.createElement("li");
+            li.textContent = `${skill.name} (${skill.category})`;
+            list.appendChild(li);
+        });
+    }
+
+    // Function to Populate Courses
+    function populateCourses(courses) {
+        const list = document.getElementById("courses-list");
+        list.innerHTML = "";
+        courses.forEach(course => {
+            const li = document.createElement("li");
+            li.innerHTML = `<a href="${course.url}" target="_blank">${course.title} - ${course.platform} (${course.difficulty})</a>`;
+            list.appendChild(li);
+        });
+    }
+
+    // Function to Populate Learning Resources
+    function populateResources(resources) {
+        const list = document.getElementById("resources-list");
+        list.innerHTML = "";
+        resources.forEach(resource => {
+            const li = document.createElement("li");
+            if (resource.url) {
+                li.innerHTML = `<a href="${resource.url}" target="_blank">${resource.name || resource.title}</a>`;
+            } else {
+                li.textContent = `${resource.title} by ${resource.author}`;
+            }
+            list.appendChild(li);
+        });
+    }
+
+    // Function to Populate Roadmap
+    function populateRoadmap(roadmap) {
+        const container = document.getElementById("roadmap-container");
+        container.innerHTML = "";
+        roadmap.forEach(week => {
+            const div = document.createElement("div");
+            div.classList.add("roadmap-week");
+            div.innerHTML = `
+            <h4>Week ${week.week}: ${week.focus}</h4>
+            <ul>
+                ${week.tasks.map(task => `<li>${task}</li>`).join("")}
+            </ul>
+            <p><strong>Project:</strong> ${week.project}</p>
+        `;
+            container.appendChild(div);
+        });
+    }
+
+    // Function to Populate Career Tips
+    function populateCareerTips(tips) {
+        const list = document.getElementById("career-tips");
+        list.innerHTML = "";
+        tips.forEach(tip => {
+            const li = document.createElement("li");
+            li.textContent = tip;
+            list.appendChild(li);
+        });
+    }
+</script>
+
+</html>

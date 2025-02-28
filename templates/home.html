@@ -1,67 +1,227 @@
 <html>
+
 <head>
-  <meta charset="utf-8" />
-  <title>Auth0 Example</title>
+    <meta charset="utf-8" />
+    <title>Auth0 Example</title>
+    <style>
+        /* General Styles */
+        body {
+            background: #f8f9fa;
+            /* Light background */
+            color: #333;
+            /* Dark text for contrast */
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease-in-out;
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 32px;
+            color: #222;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Logout Link */
+        p a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 2px solid transparent;
+            transition: border-bottom 0.3s, color 0.3s;
+        }
+
+        p a:hover {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        /* Form Container */
+        form {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 30px auto;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            animation: slideIn 1s ease-in-out;
+        }
+
+        /* Labels */
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 10px 0 5px;
+            color: #444;
+            text-align: left;
+        }
+
+        /* Input Fields */
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #888;
+        }
+
+        /* Input Hover and Focus */
+        input:hover,
+        select:hover,
+        textarea:hover,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+            background: #fff;
+        }
+
+        /* Button */
+        button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background: #0056b3;
+            box-shadow: 0px 4px 15px rgba(0, 123, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            form {
+                max-width: 90%;
+            }
+        }
+    </style>
 </head>
+
 <body>
     <h1>Welcome {{name}}!</h1>
     <p><a href="/logout">Logout</a></p>
     <form action="/predict" method="POST">
         <input type="hidden" id="email" name="email" value="{{ email }}" />
         <input type="hidden" id="name" name="name" value="{{ name }}" />
-    
+
         <label for="age_group">Age Group:</label>
         <select id="age_group" name="age_group" required>
             <option value="" disabled selected>Select your age group</option>
-            <option value="18-25" {% if user_data.get('age_group') == '18-25' %}selected{% endif %}>18-25</option>
-            <option value="26-35" {% if user_data.get('age_group') == '26-35' %}selected{% endif %}>26-35</option>
-            <option value="36-45" {% if user_data.get('age_group') == '36-45' %}selected{% endif %}>36-45</option>
-            <option value="46+" {% if user_data.get('age_group') == '46+' %}selected{% endif %}>46+</option>
+            <option value="18-25" {% if user_data.get('age_group')=='18-25' %}selected{% endif %}>18-25</option>
+            <option value="26-35" {% if user_data.get('age_group')=='26-35' %}selected{% endif %}>26-35</option>
+            <option value="36-45" {% if user_data.get('age_group')=='36-45' %}selected{% endif %}>36-45</option>
+            <option value="46+" {% if user_data.get('age_group')=='46+' %}selected{% endif %}>46+</option>
         </select><br><br>
-    
+
         <label for="current_role">Current Role:</label>
-        <input type="text" id="current_role" name="current_role" placeholder="{{ user_data.get('current_role', '') }}" required><br><br>
-    
+        <input type="text" id="current_role" name="current_role" placeholder="{{ user_data.get('current_role', '') }}"
+            required><br><br>
+
         <label for="industry">Industry:</label>
-        <input type="text" id="industry" name="industry" placeholder="{{ user_data.get('industry', '') }}" required><br><br>
-    
+        <input type="text" id="industry" name="industry" placeholder="{{ user_data.get('industry', '') }}"
+            required><br><br>
+
         <label for="experience">Years of Experience:</label>
-        <input type="number" id="experience" name="experience" min="0" placeholder="{{ user_data.get('experience', '') }}" required><br><br>
-    
+        <input type="number" id="experience" name="experience" min="0"
+            placeholder="{{ user_data.get('experience', '') }}" required><br><br>
+
         <label for="career_goal">Career Goal:</label>
-        <textarea id="career_goal" name="career_goal" placeholder="{{ user_data.get('career_goal', '') }}" required></textarea><br><br>
-    
+        <textarea id="career_goal" name="career_goal" placeholder="{{ user_data.get('career_goal', '') }}"
+            required></textarea><br><br>
+
         <label for="new_career">Interested in New Career?</label>
         <select id="new_career" name="new_career" required>
             <option value="" disabled selected>Select an option</option>
-            <option value="Yes" {% if user_data.get('new_career') == 'Yes' %}selected{% endif %}>Yes</option>
-            <option value="No" {% if user_data.get('new_career') == 'No' %}selected{% endif %}>No</option>
+            <option value="Yes" {% if user_data.get('new_career')=='Yes' %}selected{% endif %}>Yes</option>
+            <option value="No" {% if user_data.get('new_career')=='No' %}selected{% endif %}>No</option>
         </select><br><br>
-    
+
         <label for="career_switch">If Yes, Preferred Career Field:</label>
-        <input type="text" id="career_switch" name="career_switch" placeholder="{{ user_data.get('career_switch', '') }}"><br><br>
-    
+        <input type="text" id="career_switch" name="career_switch"
+            placeholder="{{ user_data.get('career_switch', '') }}"><br><br>
+
         <label for="skills">Current Skills:</label>
         <input type="text" id="skills" name="skills" placeholder="{{ user_data.get('skills', '') }}" required><br><br>
-    
+
         <label for="learning_style">Preferred Learning Style:</label>
         <select id="learning_style" name="learning_style" required>
             <option value="" disabled selected>Select a learning style</option>
-            <option value="Visual" {% if user_data.get('learning_style') == 'Visual' %}selected{% endif %}>Visual</option>
-            <option value="Auditory" {% if user_data.get('learning_style') == 'Auditory' %}selected{% endif %}>Auditory</option>
-            <option value="Kinesthetic" {% if user_data.get('learning_style') == 'Kinesthetic' %}selected{% endif %}>Kinesthetic</option>
-            <option value="Reading/Writing" {% if user_data.get('learning_style') == 'Reading/Writing' %}selected{% endif %}>Reading/Writing</option>
+            <option value="Visual" {% if user_data.get('learning_style')=='Visual' %}selected{% endif %}>Visual</option>
+            <option value="Auditory" {% if user_data.get('learning_style')=='Auditory' %}selected{% endif %}>Auditory
+            </option>
+            <option value="Kinesthetic" {% if user_data.get('learning_style')=='Kinesthetic' %}selected{% endif %}>
+                Kinesthetic</option>
+            <option value="Reading/Writing" {% if user_data.get('learning_style')=='Reading/Writing' %}selected{% endif
+                %}>Reading/Writing</option>
         </select><br><br>
-    
+
         <label for="time_commitment">Time Commitment (hours per week):</label>
-        <input type="number" id="time_commitment" name="time_commitment" min="1" placeholder="{{ user_data.get('time_commitment', '') }}" required><br><br>
-    
+        <input type="number" id="time_commitment" name="time_commitment" min="1"
+            placeholder="{{ user_data.get('time_commitment', '') }}" required><br><br>
+
         <label for="budget">Budget (USD):</label>
-        <input type="number" id="budget" name="budget" min="0" placeholder="{{ user_data.get('budget', '') }}" required><br><br>
-    
+        <input type="number" id="budget" name="budget" min="0" placeholder="{{ user_data.get('budget', '') }}"
+            required><br><br>
+
         <button type="submit">Submit</button>
     </form>
-    
-    
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="pdf_file" accept="application/pdf" required>
+        <input type="text" id="goal" name="goal">
+        <button type="submit">Upload</button>
+    </form>
+
 </body>
+
 </html>
