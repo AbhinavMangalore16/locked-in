@@ -229,7 +229,7 @@
 
 <body>
     <nav>
-        <div class="logo">Learning Hub</div>
+        <div class="logo">Locked-In</div>
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#courses">Courses</a></li>
@@ -249,19 +249,19 @@
         <h2>Popular Courses</h2>
         <div class="course-list">
             <div class="course">
-                <img src="course1.jpg" alt="Course 1">
+                <img src="{{ url_for('static', filename='web_dev.jpg') }}" alt="wd">
                 <h3>Web Development</h3>
                 <p>Master HTML, CSS, JavaScript & More</p>
                 <button>Enroll Now</button>
             </div>
             <div class="course">
-                <img src="course2.jpg" alt="Course 2">
+                <img src="{{ url_for('static', filename='data_science.jpg') }}" alt="ds">
                 <h3>Data Science</h3>
                 <p>Learn Python, Machine Learning & AI</p>
                 <button>Enroll Now</button>
             </div>
             <div class="course">
-                <img src="course3.jpg" alt="Course 3">
+                <img src="{{ url_for('static', filename='aiml.jpg') }}" alt="ds">
                 <h3>Cybersecurity</h3>
                 <p>Protect Systems & Prevent Attacks</p>
                 <button>Enroll Now</button>
